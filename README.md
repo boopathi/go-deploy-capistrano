@@ -9,10 +9,10 @@ Capistrano Files for deploying Go application
 
 ### 2. Modify `config/deploy.rb`
 
-Open the file `config/deploy.rb and modify the following settings`
+Open the file `config/deploy.rb` and modify the following settings
 
-+ `:application` (required) Application Name
-+ `:user` (required) Username on the server
++ `:application` (_required_) Application Name
++ `:user` (_required_) Username on the server
 + `:default_stage` (default=staging) Choose between the stages production & staging.
 + `:deploy_to` (default=/home/user/application) Specify the location where the application will be deployed
 
