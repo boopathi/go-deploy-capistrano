@@ -3,10 +3,14 @@ set :application, "<APPLICATION_NAME>"
 set :user, "<USERNAME_ON_SERVER>"
 
 # You might want to modify these too
-set :deploy_to, "/home/#{user}/#{appication}"
+set :deploy_to, "/home/#{user}/#{application}"
 set :use_sudo, false
+set :keep_releases, 3
 # #{user} should have write permissions to #{bin_dir}
 set :bin_dir, "/home/#{user}/bin"
+
+set :stages, %w(production staging)
+set :default_stage, "production"
 
 # Set of files to exclude
 set :copy_exclude, [".go", "**/*.go",
@@ -31,13 +35,15 @@ set :copy_strategy, :export
 # So, to override that, we use `-o #{application}`
 set :build_script, "go build -o #{application}"
 
+require 'capistrano/ext/multistage'
+
 # Import the servers list
 task :staging do
-  servers = IO.read("staging.list").split
+  servers = IO.read("config/staging.list").split
   role(:app) { servers }
 end
 task :production do
-  servers = IO.read("production.list").split
+  servers = IO.read("config/production.list").split
   role(:app) { servers }
 end
 
