@@ -5,17 +5,41 @@ set :user, "<USERNAME_ON_SERVER>"
 # You might want to modify these too
 set :deploy_to, "/home/#{user}/#{appication}"
 set :use_sudo, false
-set :copy_exclude, [".git","Capfile","*~","*.go","config"]
-# Note: The user has to have write permissions to this folder
+# #{user} should have write permissions to #{bin_dir}
 set :bin_dir, "/home/#{user}/bin"
 
-# Mostly, you need not modify anything
-# below this
+# Set of files to exclude
+set :copy_exclude, [".go", "**/*.go",
+  # go
+  "*.o", "*.a", "*.so",
+  # git
+  ".gitignore", ".git",
+  # *akefiles
+  "Makefile*", "Capfile*", "config/*.rb"
+]
+
+# VCS settings
 set :repository, "."
 set :scm, :none
+
+# Copy files to deploy
 set :deploy_via, :copy
-set :build_script, "go build -o #{application}"
 set :copy_strategy, :export
+
+# Cap deploy copies the files to tmp directory and 
+# go build takes the directory's name as the app's name
+# So, to override that, we use `-o #{application}`
+set :build_script, "go build -o #{application}"
+
+# Import the servers list
+task :staging do
+  servers = IO.read("staging.list").split
+  role(:app) { servers }
+end
+task :production do
+  servers = IO.read("production.list").split
+  role(:app) { servers }
+end
 
 # If the application is running as a service,
 # use these hooks to start, stop or restart
