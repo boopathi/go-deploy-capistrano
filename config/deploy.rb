@@ -65,7 +65,7 @@ namespace :deploy do
   end
 end
 
-# Some priliminary stuff that needs to be setup
+# Some preliminary stuff that needs to be setup
 namespace :remote do
   task :create_apps_dir do
     run "mkdir -p #{deploy_to}/releases"
@@ -79,5 +79,3 @@ end
 
 after "deploy:setup", "remote:create_apps_dir"
 after "deploy", "remote:symlink_to_bin"
-
-
